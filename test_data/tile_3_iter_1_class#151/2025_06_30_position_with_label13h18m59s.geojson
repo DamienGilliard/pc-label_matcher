@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.7116072,
+          46.5917075,
+          914.5792079
+        ]
+      },
+      "properties": {
+        "SNR": "29",
+        "stddev longitude": "nan",
+        "stddev latitude": "nan",
+        "stddev altitude": "0.0848024",
+        "stddev SNR": "5",
+        " label": "Fagus_sylvatica"
+      }
+    }
+  ]
+}
