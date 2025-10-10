@@ -1,3 +1,5 @@
+import os
+
 import utils
 
 class PointCloud:
@@ -20,5 +22,9 @@ class PointCloud:
     def apply_label_to_las(self, pc_label):
         self.las.classification[:] = int(pc_label.label)
             
-    def store_las(self, output_path):
+    def store_las(self, folder_path, filename=None):
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        filename = f"pc_with_label_at_{self.localisation[0]}_{self.localisation[1]}.las"
+        output_path = os.path.join(folder_path, filename)
         self.las.write(output_path)

@@ -8,8 +8,7 @@ def main():
     new_point_clouds = matcher.match_point_clouds_with_labels(point_clouds, labels)
     print(f"Matched {len(new_point_clouds)} point clouds with labels.")
     for new_pc in new_point_clouds:
-        output_path = f"./output_las/pc_with_label_at_{new_pc.localisation[0]}_{new_pc.localisation[1]}.las"
-        new_pc.store_las(output_path)
+        new_pc.store_las("./output_las")
 
 if __name__ == "__main__":
     main()
