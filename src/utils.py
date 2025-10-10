@@ -62,3 +62,41 @@ def convert_lv95_to_wgs84(x, y, z):
     alt = z + 49.55 - 12.60 * y_aux - 22.64 * x_aux
 
     return lat, lon, alt
+
+def get_label_name(label_index:int, csv_table_path:str) -> str:
+    """
+    Get the label name from a CSV table given its index.
+
+    Parameters:
+    label_index (int): The index of the label.
+    csv_table_path (str): The path to the CSV file containing the label table.
+
+    Returns:
+    str: The name of the label corresponding to the given index.
+    """
+    with open(csv_table_path, 'r') as file:
+        labels_dict = {}
+        lines = file.readlines()
+        for line in lines[1:]:  # Skip header
+            parts = line.strip().split(';')
+            labels_dict[int(parts[0])] = parts[1]
+    return labels_dict.get(label_index, "Unknown")
+
+def get_label_index(label_name:str, csv_table_path:str) -> int:
+    """
+    Get the label index from a CSV table given its name.
+
+    Parameters:
+    label_name (str): The name of the label.
+    csv_table_path (str): The path to the CSV file containing the label table.
+
+    Returns:
+    int: The index of the label corresponding to the given name.
+    """
+    with open(csv_table_path, 'r') as file:
+        labels_dict = {}
+        lines = file.readlines()
+        for line in lines[1:]:  # Skip header
+            parts = line.strip().split(';')
+            labels_dict[parts[1]] = int(parts[0])
+    return labels_dict.get(label_name, -1)
