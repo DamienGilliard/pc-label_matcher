@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.7122753,
+          46.5914315,
+          913.2
+        ]
+      },
+      "properties": {
+        "SNR": "32",
+        "stddev longitude": "0.0000035",
+        "stddev latitude": "nan",
+        "stddev altitude": "0.0638877",
+        "stddev SNR": "3",
+        " label": "Acer_pseudoplatanus"
+      }
+    }
+  ]
+}
