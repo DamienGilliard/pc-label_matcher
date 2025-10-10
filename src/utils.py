@@ -2,7 +2,7 @@
 Several utils functions for point cloud processing and coordinates transformations.
 """
 
-def convert_wgs84_to_lv95(lat, lon, alt):
+def convert_wgs84_to_lv95(lon, lat, alt):
     """
     Convert coordinates from WGS84 (degrees) to LV95.
 
