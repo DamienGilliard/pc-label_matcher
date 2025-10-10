@@ -38,19 +38,19 @@ def load_las_files_from_directory(directory_path, depth=1):
                         point_clouds.append(pc)
     return point_clouds
 
-def load_labels_from_csv(csv_file_path, labels_csv_path):
+def load_labels_from_csv(labels_csv_path, classes_csv_path):
     """
     Load labels from a CSV file.
 
     Parameters:
-    csv_file_path (str): The path to the CSV file containing labels.
-    labels_csv_path (str): The path to the CSV file containing the reference label table.
+    labels_csv_path (str): The path to the CSV file containing labels.
+    classes_csv_path (str): The path to the CSV file containing the reference label table.
 
     Returns:
     list: A list of Label objects (see label module).
     """
     labels = []
-    with open(csv_file_path, 'r') as file:
+    with open(labels_csv_path, 'r') as file:
         lines = file.readlines()
         if lines[0].strip() != "#Mean longitude;Mean latitude;Mean altitude;SNR;stddev longitude;stddev latitude;stddev altitude;stddev SNR; label":
             raise ValueError(f"Unexpected header format. Expected:\n'#Mean longitude;Mean latitude;Mean altitude;SNR;stddev longitude;stddev latitude;stddev altitude;stddev SNR; label', \ngot:\n'{lines[0].strip()}'")
@@ -59,7 +59,7 @@ def load_labels_from_csv(csv_file_path, labels_csv_path):
             if len(parts) != 9:
                 raise ValueError(f"Unexpected number of columns in line: {line.strip()}")
             line_label = label.Label(
-                label=utils.get_label_index(parts[8], labels_csv_path),
+                label=utils.get_label_index(parts[8], classes_csv_path),
                 geolocation=(float(parts[0]), float(parts[1]), float(parts[2])),
                 std_devs=(float(parts[4]), float(parts[5]), float(parts[6]))
             )
