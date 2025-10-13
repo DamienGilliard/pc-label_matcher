@@ -11,7 +11,7 @@ class Label:
         self.std_devs = std_devs
 
     def get_std_dev_norm(self):
-        return (self.std_devs[0]**2 + self.std_devs[1]**2 + self.std_devs[2]**2) ** 0.5
+        return ((self.std_devs[0] * 111111)**2 + (self.std_devs[1] * 111111)**2 + self.std_devs[2]**2) ** 0.5 # Approx conversion of degrees to meters for lat/lon
 
     def get_2d_location(self):
         lv95_coords = utils.convert_wgs84_to_lv95(self.geolocation[0], self.geolocation[1], self.geolocation[2])
