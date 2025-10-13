@@ -28,6 +28,7 @@ If you prefer to have them all in the `point_clouds` folder directly, use:
 python .\src\main.py --dir_depth 1 --pc_to_label 0 --max_distance 2.0
 ```
 
-The parameters:
--  `--pc_to_label` specifies if we want to match labels to closest pc (for example if you have few labels for a lot of pc) or vice-versa (if you have a lot of labels for a few pc) 
-- `--max_distance` specifies the maximum distance admissible to consider a label as associable to the point cloud. The position of the point cloud is the center of its bounding box
+The parameters: 
+- `--dir_depth` specifies if the point cloud data is all in the `./data/point_clouds` folder (1) or in subfolders of it (2). 
+- `--pc_to_label` specifies if we want to match labels to closest pc (for example if you have few labels for a lot of pc. value = 0) or vice-versa (if you have a lot of labels for a few pc. value = 1) 
+- `--max_distance` specifies the maximum distance admissible to consider a label as associable to the point cloud. The position of the point cloud is taken as the center of its bounding box. Any reasonable float value can be used (in meters)
