@@ -20,10 +20,14 @@ Once the environment activated, put your data in the `./data` directory. We prov
 
 To run the code if the `las` files are as in our example, run:
 ```bash
-python ./src/main.py --dir_depth  2
+python .\src\main.py --dir_depth 2 --pc_to_label 0 --max_distance 2.0
 ```
 
 If you prefer to have them all in the `point_clouds` folder directly, use:
 ```bash
-python ./src/main.py --dir_depth  1
+python .\src\main.py --dir_depth 1 --pc_to_label 0 --max_distance 2.0
 ```
+
+The parameters:
+-  `--pc_to_label` specifies if we want to match labels to closest pc (for example if you have few labels for a lot of pc) or vice-versa (if you have a lot of labels for a few pc) 
+- `--max_distance` specifies the maximum distance admissible to consider a label as associable to the point cloud. The position of the point cloud is the center of its bounding box
