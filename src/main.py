@@ -4,7 +4,7 @@ import os
 import data_loader, matcher
 
 def main(dir_depth: int, pc_to_label: bool, max_distance: float):
-    point_clouds = data_loader.load_las_files_from_directory('./data/point_clouds', depth=dir_depth)
+    point_clouds = data_loader.load_pc_files_from_directory('./data/point_clouds', depth=dir_depth)
     
     label_csv_files = [f for f in os.listdir('./data/labels') if f.endswith('.csv')]
     if not label_csv_files:
@@ -16,7 +16,7 @@ def main(dir_depth: int, pc_to_label: bool, max_distance: float):
     new_point_clouds = matcher.match_point_clouds_with_labels(point_clouds, labels, pc_to_label, max_distance)
     print(f"Matched {len(new_point_clouds)} point clouds with labels.")
     for new_pc in new_point_clouds:
-        new_pc.store_las("./output_las")
+        new_pc.store_pc("./output_pc")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process point clouds and labels.")
