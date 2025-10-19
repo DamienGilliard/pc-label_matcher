@@ -14,7 +14,6 @@ class Label:
         return ((self.std_devs[0] * 111111)**2 + (self.std_devs[1] * 111111)**2 + self.std_devs[2]**2) ** 0.5 # Approx conversion of degrees to meters for lat/lon
 
     def get_2d_location(self, coord_system="LV95"):
-
         if coord_system == "LV95":
             if self.geolocation[0] < 180 and self.geolocation[1] < 90:
                 lv95_coords = utils.convert_wgs84_to_lv95(self.geolocation[0], self.geolocation[1], self.geolocation[2])
