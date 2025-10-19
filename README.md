@@ -1,8 +1,12 @@
 # pc-label_matcher
 
-<center><img src="./assets/labels_and_pc.png" width=75%></center>
+<p align="center">
+    <img src="./assets/labels_and_pc.png" width="75%">
+</p>
 
-pc-label_matcher is  a small python script that associates labels to point cloud segments. It takes `las` point clouds and a `csv` with labels and geolocations and associate the closest closest label for each point cloud, and stores the label as `classification` of the las point cloud. This assumes that the `las` point cloud contains point of [format 0](https://www.asprs.org/wp-content/uploads/2019/03/LAS_1_4_r14.pdf) (to contain the "classification" field).
+pc-label_matcher is  a small python script that associates labels to point cloud segments. It takes `las` or `ply` point clouds and a `csv` with labels and geolocations and associate the closest closest label for each point cloud, and stores the label as `classification` of the las point cloud. If using `las` point clouds, we assume that it contains points of [format 0](https://www.asprs.org/wp-content/uploads/2019/03/LAS_1_4_r14.pdf) (to contain the "classification" field).
+
+Currently the coordinate systems supported are: `WSG84`, `LV95`
 
 ## Usage
 A conda environment is provided, so assuming you have [conda](https://anaconda.org/anaconda/conda) installed, open a terminal at the root of the repository and run:
