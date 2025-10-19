@@ -39,27 +39,33 @@ class PointCloud:
                 mean = utils.convert_wgs84_to_lv95(mean[0], mean[1], mean[2])
         return (mean[1], mean[0])
     
-    def apply_label(self, pc_label):
+    def apply_label(self, pc_label: int):
         if self.type_str == "LAS":
             self.pc.classification[:] = int(pc_label.label)
         elif self.type_str == "PLY":
             vertex = self.pc['vertex']
             data = vertex.data
 
-            if 'Classification' not in data.dtype.names:
-                data = rfn.append_fields(
-                            data,
-                            'Classification',
-                            np.full(data.shape, int(pc_label.label), dtype=np.uint8),
-                            usemask=False,
-                            dtypes=[np.uint8]
-                        )
+            if 'scalar_Classification' in data.dtype.names:
+                data['scalar_Classification'][:] = float(pc_label.label)
             else:
-                data['Classification'] = int(pc_label.label)
-            vertex_element = PlyElement.describe(data, 'vertex')
-            self.pc = PlyData([vertex_element], text=self.pc.text)
+                data = rfn.append_fields(
+                    data,
+                    'scalar_Classification',
+                    np.full(data.shape, float(pc_label.label), dtype=np.float32),
+                    usemask=False,
+                    dtypes=[np.float32]
+                )
+
+            elements = []
+            for el in self.pc.elements:
+                if el.name == 'vertex':
+                    elements.append(PlyElement.describe(data, 'vertex'))
+                else:
+                    elements.append(el)
+            self.pc = PlyData(elements, text=self.pc.text)
             
-    def store_pc(self, folder_path, filename=None):
+    def store_pc(self, folder_path: str):
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         if self.type_str == "LAS":
