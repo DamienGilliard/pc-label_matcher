@@ -208,3 +208,6 @@ __marimo__/
 
 #Apple junk files
 .DS_Store
+
+# Output directory for point cloud files
+output_pc/
