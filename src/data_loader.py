@@ -3,19 +3,20 @@ This module provides functions to load data from las and CSV files.
 """
 import os
 import laspy
+import plyfile
 import label, utils, point_cloud
 
-def load_las_files_from_directory(directory_path, depth=1):
+def load_pc_files_from_directory(directory_path, depth=1):
     """
-    Load all .las files from the specified directory.
+    Load all .las or .ply files from the specified directory.
 
     Parameters:
-    directory_path (str): The path to the directory containing .las files.
+    directory_path (str): The path to the directory containing .las or .ply files.
     depth (int): The depth of directory (1 if all las files are in the same directory,
                  2 if las files are in subdirectories of directory_path).
 
     Returns:
-    list: A list of laspy.LasData objects.
+    list: A list of point_cloud.PointCloud objects.
     """
 
     point_clouds = []
@@ -24,7 +25,12 @@ def load_las_files_from_directory(directory_path, depth=1):
             if filename.endswith('.las'):
                 file_path = os.path.join(directory_path, filename)
                 las_data = laspy.read(file_path)
-                pc = point_cloud.PointCloud(las_data)
+                pc = point_cloud.PointCloud(las_data, type_str="LAS")
+                point_clouds.append(pc)
+            elif filename.endswith('.ply'):
+                file_path = os.path.join(directory_path, filename)
+                ply_data = plyfile.PlyData.read(file_path)
+                pc = point_cloud.PointCloud(ply_data, type_str="PLY")
                 point_clouds.append(pc)
     elif depth == 2:
         for root, dirs, files in os.walk(directory_path):
@@ -35,6 +41,11 @@ def load_las_files_from_directory(directory_path, depth=1):
                         file_path = os.path.join(dir_path, filename)
                         las_data = laspy.read(file_path)
                         pc = point_cloud.PointCloud(las_data)
+                        point_clouds.append(pc)
+                    elif filename.endswith('.ply'):
+                        file_path = os.path.join(dir_path, filename)
+                        ply_data = plyfile.PlyData.read(file_path)
+                        pc = point_cloud.PointCloud(ply_data, type_str="PLY")
                         point_clouds.append(pc)
     return point_clouds
 
