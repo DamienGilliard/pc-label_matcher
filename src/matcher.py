@@ -13,7 +13,7 @@ def match_point_clouds_with_labels(point_clouds, labels, pc_to_label=True, max_d
             best_label = None
             best_distance = float('inf')
             for lbl in sorted_labels:
-                distance = np.linalg.norm(np.array(pc.localisation) - np.array(lbl.get_2d_location()))
+                distance = np.linalg.norm(np.array(pc.localisation) - np.array(lbl.get_2d_location("LV95")))
                 if distance < best_distance:
                     best_distance = distance
                     best_label = lbl
