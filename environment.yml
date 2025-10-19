@@ -6,5 +6,8 @@ dependencies:
   - mistune=0.8.4
   - docutils=0.22.0
   - setuptools=80.9.0
-  - laspy=2.6.1
+
   - numpy=2.3.0
+
+  - laspy=2.6.1
+  - plyfile=1.1
