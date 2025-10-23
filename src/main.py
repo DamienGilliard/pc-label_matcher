@@ -20,7 +20,8 @@ def main(dir_depth: int, pc_to_label: bool, max_distance: float):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process point clouds and labels.")
-    parser.add_argument('--dir_depth', type=int, default=2, help='Depth of the directory to scan for LAS files.\nIf set to 1, all las files are supposed to be in the same directory.\nIf set to 2, all las files are supposed to be in subdirectories of the given directory.')
+    parser.add_argument('--dir_depth', type=int, default=2, help='Depth of the directory to scan for LAS files.\n If set to 0, we suppose only one file is provided, and contains a scalar field that distinguishes the different segments\nIf set to 1, all las files are supposed to be in the same directory.\nIf set to 2, all las files are supposed to be in subdirectories of the given directory.')
+    parser.add_argument('--scalar_field_name', type=str, default=None, help='Name of the scalar field to load from point clouds (if any). Default is None.')
     parser.add_argument('--pc_to_label', type=int, default=1, help='Whether to match point clouds to labels (1) or labels to point clouds (0). Default is 1.')
     parser.add_argument('--max_distance', type=float, default=2.0, help='Maximum distance for matching point clouds to labels (in meters). Default is 2.0.')
     args = parser.parse_args()
