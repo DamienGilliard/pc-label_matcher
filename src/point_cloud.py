@@ -109,7 +109,41 @@ class PointCloud:
                 else:
                     elements.append(el)
             self.pc = PlyData(elements, text=self.pc.text)
-            
+
+    def apply_label_to_scalar_field(self, scalar_field_value: int, pc_label: int):
+        """
+        applies a given label to all points in the point cloud with the given scalar field value
+        """
+        if self.type_str == "PLY":
+            vertex = self.pc['vertex']
+            data = vertex.data
+
+            if 'scalar_Classification' in data.dtype.names:
+                print("scalar_Classification field already exists in PLY point cloud. Updating values.")
+                data['scalar_Classification'][data[self.scalar_field_name] == scalar_field_value] = float(pc_label.label)
+
+            else:
+                print("scalar_Classification field does not exist in PLY point cloud. Creating new field.")
+                data = rfn.append_fields(
+                    data,
+                    'scalar_Classification',
+                    np.full(data.shape, float(-1), dtype=np.float32),
+                    usemask=False,
+                    dtypes=[np.float32]
+                )
+                data['scalar_Classification'][data[self.scalar_field_name] == scalar_field_value] = float(pc_label.label)
+
+            elements = []
+            for el in self.pc.elements:
+                if el.name == 'vertex':
+                    elements.append(PlyElement.describe(data, 'vertex'))
+                else:
+                    elements.append(el)
+            self.pc = PlyData(elements, text=self.pc.text)
+        
+        else:
+            raise NotImplementedError("apply_label_to_scalar_field is only implemented for PLY point clouds.")
+
     def store_pc(self, folder_path: str):
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
