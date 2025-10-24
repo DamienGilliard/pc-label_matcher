@@ -149,10 +149,20 @@ class PointCloud:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         if self.type_str == "LAS":
-            filename = f"pc_with_label_at_{self.localisation[0]}_{self.localisation[1]}.las"
-            output_path = os.path.join(folder_path, filename)
-            self.pc.write(output_path)
+            if self.localisation is not None:
+                filename = f"pc_with_label_at_{self.localisation[0]}_{self.localisation[1]}.las"
+                output_path = os.path.join(folder_path, filename)
+                self.pc.write(output_path)
+            else:
+                filename = "pc_with_labels.las"
+                output_path = os.path.join(folder_path, filename)
+                self.pc.write(output_path)
         elif self.type_str == "PLY":
-            filename = f"pc_with_label_at_{self.localisation[0]}_{self.localisation[1]}.ply"
-            output_path = os.path.join(folder_path, filename)
-            self.pc.write(output_path)
+            if self.localisation is not None:
+                filename = f"pc_with_label_at_{self.localisation[0]}_{self.localisation[1]}.ply"
+                output_path = os.path.join(folder_path, filename)
+                self.pc.write(output_path)
+            else:
+                filename = "pc_with_labels.ply"
+                output_path = os.path.join(folder_path, filename)
+                self.pc.write(output_path)
