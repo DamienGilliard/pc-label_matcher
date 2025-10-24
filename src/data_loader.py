@@ -23,8 +23,8 @@ def load_pc_files_from_directory(directory_path, depth=1, scalar_field_name=None
 
     point_clouds = []
     if depth == 0:
-        # Single file case
-        filename = directory_path
+        filename = os.listdir(directory_path)[0]
+        print(f"Loading single point cloud file: {filename}")
         if filename.endswith('.las'):
             file_path = os.path.join(directory_path, filename)
             las_data = laspy.read(file_path)
