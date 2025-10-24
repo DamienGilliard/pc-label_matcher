@@ -50,28 +50,20 @@ class PointCloud:
         return (mean[1], mean[0])
     
     def get_bbox_2d_centers(self):
-        centers = []
-        if self.type_str == "LAS":
-            classifications = np.unique(self.pc.classification)
-            for cls in classifications:
-                mask = self.pc.classification == cls
-                xs = self.pc.x[mask]
-                ys = self.pc.y[mask]
-                zs = self.pc.z[mask]
-                mean_x = (min(xs) + max(xs)) / 2
-                mean_y = (min(ys) + max(ys)) / 2
-                mean_z = (min(zs) + max(zs)) / 2
-                if mean_x < 180 and mean_y < 90:
-                    print("Point cloud seems to be in WGS84 coordinates, converting to LV95.")
-                    mean_x, mean_y, mean_z = utils.convert_wgs84_to_lv95(mean_x, mean_y, mean_z)
-                centers.append((mean_y, mean_x))
-        elif self.type_str == "PLY":
+        """
+        Get the 2D centers of the bounding boxes for each segment in the point cloud.
+
+        Returns:
+        dict: A dictionary mapping scalar field values to their corresponding (lat, lon) centers.
+        """
+        centers = {}
+        if self.type_str == "PLY":
             points = self.pc['vertex']
             data = points.data
             scalar_field = data[self.scalar_field_name]
-            classifications = np.unique(scalar_field)
-            for cls in classifications:
-                mask = scalar_field == cls
+            scalar_field_values = np.unique(scalar_field)
+            for sfv in scalar_field_values:
+                mask = scalar_field == sfv
                 xs = data['x'][mask]
                 ys = data['y'][mask]
                 zs = data['z'][mask]
@@ -81,7 +73,12 @@ class PointCloud:
                 if mean_x < 180 and mean_y < 90:
                     print("Point cloud seems to be in WGS84 coordinates, converting to LV95.")
                     mean_x, mean_y, mean_z = utils.convert_wgs84_to_lv95(mean_x, mean_y, mean_z)
-                centers.append((mean_y, mean_x))
+                centers[sfv] = (mean_y, mean_x)
+            if 0 in centers:
+                del centers[0]
+                print("Removed segment with scalar field value 0 from localisations because it is assumed to be the ground.")
+        else:
+            raise NotImplementedError("get_bbox_2d_centers is only implemented for PLY point clouds.")
         return centers
     
     def apply_label(self, pc_label: int):
