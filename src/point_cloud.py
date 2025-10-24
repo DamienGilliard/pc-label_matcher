@@ -10,23 +10,27 @@ class PointCloud:
     """
     This class represents a point cloud with its associated data.
     """
-    
-    def __init__(self, pc, pc_label=None, type_str="LAS"):
+
+    def __init__(self, pc, pc_label=None, type_str="LAS", discriminative_scalar_field_name=None):
         self.pc = pc
         self.type_str = type_str
         self.label = pc_label
-        self.scalar_field_name = None
-        if self.scalar_field_name:
+        self.discriminative_scalar_field_name = discriminative_scalar_field_name
+        if self.discriminative_scalar_field_name:
             if self.type_str == "LAS":
                 self.n_clusters = len(np.unique(self.pc.classification))
             elif self.type_str == "PLY":
-                self.n_clusters = len(np.unique(self.pc['vertex'][self.scalar_field_name]))
+                if self.discriminative_scalar_field_name not in self.pc['vertex'].data.dtype.names:
+                    raise ValueError(f"Scalar field '{self.discriminative_scalar_field_name}' not found in PLY point cloud.")
+                self.n_clusters = len(np.unique(self.pc['vertex'][self.discriminative_scalar_field_name]))
         else:
             self.n_clusters = 1
         if self.n_clusters == 1:
             self.localisation = self.get_bbox_2d_center()
+            self.localisations = None
         else:
-            self.localisation = self.get_bbox_2d_centers()
+            self.localisation = None
+            self.localisations = self.get_bbox_2d_centers()
 
 
     def get_bbox_2d_center(self):
@@ -60,7 +64,7 @@ class PointCloud:
         if self.type_str == "PLY":
             points = self.pc['vertex']
             data = points.data
-            scalar_field = data[self.scalar_field_name]
+            scalar_field = data[self.discriminative_scalar_field_name]
             scalar_field_values = np.unique(scalar_field)
             for sfv in scalar_field_values:
                 mask = scalar_field == sfv
@@ -117,7 +121,7 @@ class PointCloud:
 
             if 'scalar_Classification' in data.dtype.names:
                 print("scalar_Classification field already exists in PLY point cloud. Updating values.")
-                data['scalar_Classification'][data[self.scalar_field_name] == scalar_field_value] = float(pc_label.label)
+                data['scalar_Classification'][data[self.discriminative_scalar_field_name] == scalar_field_value] = float(pc_label.label)
 
             else:
                 print("scalar_Classification field does not exist in PLY point cloud. Creating new field.")
@@ -128,7 +132,7 @@ class PointCloud:
                     usemask=False,
                     dtypes=[np.float32]
                 )
-                data['scalar_Classification'][data[self.scalar_field_name] == scalar_field_value] = float(pc_label.label)
+                data['scalar_Classification'][data[self.discriminative_scalar_field_name] == scalar_field_value] = float(pc_label.label)
 
             elements = []
             for el in self.pc.elements:
