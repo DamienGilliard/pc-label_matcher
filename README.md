@@ -1,7 +1,7 @@
 # pc-label_matcher
 
 <p align="center">
-    <img src="./assets/labels_and_pc.png" width="75%">
+    <img src="./assets/pc_colorized_by_label.png" width="75%">
 </p>
 
 pc-label_matcher is  a small python script that associates labels to point cloud segments. It takes `las` or `ply` point clouds and a `csv` with labels and geolocations and associate the closest closest label for each point cloud, and stores the label as `classification` of the las point cloud. If using `las` point clouds, we assume that it contains points of [format 0](https://www.asprs.org/wp-content/uploads/2019/03/LAS_1_4_r14.pdf) (to contain the "classification" field).
@@ -20,19 +20,26 @@ This will take a while, the once finished, activate the environment:
 conda activate pc-label_matcher
 ```
 
-Once the environment activated, put your data in the `./data` directory. We provide example files. If you want all the `las` files to be in the `./data/point_clouds` folder directly (not individually in subfolder), no problem it is supported.
+Once the environment activated, put your data in the `./data` directory. We provide example files. If you want all the point cloud files to be in the `./data/point_clouds` folder directly (not individually in subfolder), no problem it is supported.
 
-To run the code if the `las` files are as in our example, run:
+To run the code if the point cloud files are as in our example, run:
 ```bash
-python .\src\main.py --dir_depth 2 --pc_to_label 0 --max_distance 2.0
+python .\src\main.py --dir_depth 2 --max_distance 2.0
 ```
 
 If you prefer to have them all in the `point_clouds` folder directly, use:
 ```bash
-python .\src\main.py --dir_depth 1 --pc_to_label 0 --max_distance 2.0
+python .\src\main.py --dir_depth 1 --max_distance 2.0
+```
+
+If you have a single point cloud with a scalar field 
+> ![warning](This is only supported with ply point clouds)
+
+```bash
+python ./src/main.py --dir_depth 0 --scalar_field_name scalar_PredInstance  --max_distance 2.0
 ```
 
 The parameters: 
 - `--dir_depth` specifies if the point cloud data is all in the `./data/point_clouds` folder (1) or in subfolders of it (2). 
-- `--pc_to_label` specifies if we want to match labels to closest pc (for example if you have few labels for a lot of pc. value = 0) or vice-versa (if you have a lot of labels for a few pc. value = 1) 
+- `--scalar_field_name`specifies the scalar field that discriminates between the segments in the point cloud, in case you have only one point cloud containing segments as per the scalar field
 - `--max_distance` specifies the maximum distance admissible to consider a label as associable to the point cloud. The position of the point cloud is taken as the center of its bounding box. Any reasonable float value can be used (in meters)

@@ -6,21 +6,36 @@ import laspy
 import plyfile
 import label, utils, point_cloud
 
-def load_pc_files_from_directory(directory_path, depth=1):
+def load_pc_files_from_directory(directory_path, depth=1, scalar_field_name=None):
     """
     Load all .las or .ply files from the specified directory.
 
     Parameters:
     directory_path (str): The path to the directory containing .las or .ply files.
-    depth (int): The depth of directory (1 if all las files are in the same directory,
-                 2 if las files are in subdirectories of directory_path).
+    depth (int): The depth of directory (0 if only one file is provided, 
+                 1 if all files are in the same directory,
+                 2 if all files are in subdirectories of directory_path).
+    scalar_field_name (str): The name of the scalar field to load (if any).
 
     Returns:
     list: A list of point_cloud.PointCloud objects.
     """
 
     point_clouds = []
-    if depth == 1:
+    if depth == 0:
+        filename = os.listdir(directory_path)[0]
+        print(f"Loading single point cloud file: {filename}")
+        if filename.endswith('.las'):
+            file_path = os.path.join(directory_path, filename)
+            las_data = laspy.read(file_path)
+            pc = point_cloud.PointCloud(las_data, type_str="LAS", scalar_field_name=scalar_field_name)
+            return [pc]
+        elif filename.endswith('.ply'):
+            file_path = os.path.join(directory_path, filename)
+            ply_data = plyfile.PlyData.read(file_path)
+            pc = point_cloud.PointCloud(ply_data, type_str="PLY", scalar_field_name=scalar_field_name)
+            return [pc]
+    elif depth == 1:
         for filename in os.listdir(directory_path):
             if filename.endswith('.las'):
                 file_path = os.path.join(directory_path, filename)
